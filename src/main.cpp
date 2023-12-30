@@ -766,14 +766,14 @@ int main(int argc, char **argv)
 	}
 #endif
 
-	if ( !initOutput( g_nPreferredOutputWidth, g_nPreferredOutputHeight, g_nNestedRefresh ) )
-	{
-		fprintf( stderr, "Failed to initialize output\n" );
-		return 1;
-	}
-
 	if ( BIsSDLSession() )
 	{
+		if ( !initOutput( g_nPreferredOutputWidth, g_nPreferredOutputHeight, g_nNestedRefresh ) )
+		{
+			fprintf( stderr, "Failed to initialize output\n" );
+			return 1;
+		}
+
 		if ( !SDL_Vulkan_CreateSurface( g_SDLWindow, instance, &surface ) )
 		{
 			fprintf(stderr, "SDL_Vulkan_CreateSurface failed: %s", SDL_GetError() );
@@ -787,6 +787,15 @@ int main(int argc, char **argv)
 	{
 		fprintf( stderr, "Failed to initialize Vulkan\n" );
 		return 1;
+	}
+	
+	if ( !BIsSDLSession() )
+	{
+		if ( !initOutput( g_nPreferredOutputWidth, g_nPreferredOutputHeight, g_nNestedRefresh ) )
+		{
+			fprintf( stderr, "Failed to initialize output\n" );
+			return 1;
+		}
 	}
 
 	if ( !vulkan_init_formats() )
